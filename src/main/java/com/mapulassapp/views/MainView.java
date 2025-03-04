@@ -2,15 +2,22 @@
 	
 	import java.util.ArrayList;
 	import java.util.List;
-	
-	import com.mapulassapp.models.Status;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mapulassapp.models.Status;
 	import com.mapulassapp.models.Student;
-	import com.vaadin.flow.component.button.Button;
+import com.mapulassapp.services.StudentService;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 	import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-	import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.PageTitle;
 	import com.vaadin.flow.router.Route;
 	
 	
@@ -18,26 +25,45 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 	@Route(value = "")
 	public class MainView extends VerticalLayout{
 		
+		//Construtor de injection!
+		private final StudentService studentService;
 		private LogoLayout logoLayout;
 		private Grid<Student> grid;
+		private TextField filterField;
 		
-		public MainView() {
+		public MainView(StudentService studentService) {
+			this.studentService = studentService;
 			setSizeFull();
 			setAlignItems(Alignment.CENTER);
 			
 			createFieldVariables();
 			configuredGrid();
-			add(logoLayout,grid);
+			add(logoLayout,createToolbar(),grid);
 			loadStudents();	
 			
 		}
+		
+		private Component createToolbar() {
+			filterField.setPlaceholder("Filter by name...");
+			filterField.setClearButtonVisible(true);
+			filterField.setValueChangeMode(ValueChangeMode.LAZY);
+			filterField.addValueChangeListener(e -> updateStudent());
+			
+			return new HorizontalLayout(filterField);
+		}
+
+		
+		private void updateStudent() {
+			grid.setItems(studentService.find(filterField.getValue()));
+		}
+
 		
 		private void configuredGrid() {
 			grid.setSizeFull();
 			grid.setColumns("country","zipCode");
 			grid.addColumn(s -> s.getName()).setHeader("Name");
 			grid.addColumn(s -> s.getAge()).setHeader("Age");
-			/*
+			
 			grid.addComponentColumn(s -> {
 				Icon icon;
 				
@@ -56,23 +82,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 			return icon;
 			
 			}).setHeader("Status");
-			*/
+			
 			grid.getColumns().forEach(col -> col.setAutoWidth(true));	
 		}
 		
 
 		private void loadStudents() {
-			List<Student> students = new ArrayList<>();
-			//students.add(new Student("Abel",25,1234,"MOZ", new Status("ACTIVE")));
-			//students.add(new Student("Albelardo",22,1234,"MOZ", new Status("PASSIVE")));
-			//students.add(new Student("Ana",20,1234,"MOZ", new Status("ABSOLVED")));
-			grid.setItems(students);
+			grid.setItems(studentService.findAll());
 			
 		}
 
 		private void createFieldVariables() {
-			logoLayout = new LogoLayout();
-			grid = new Grid<>(Student.class);
+			this.logoLayout = new LogoLayout();
+			this.grid = new Grid<>(Student.class);
+			this.filterField = new TextField();
 		}
 	
 	}
