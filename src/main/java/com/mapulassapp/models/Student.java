@@ -7,6 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Student {
@@ -16,15 +21,24 @@ public class Student {
 	private Integer id;
 	
 	@Column
-	private String name;
+	@NotEmpty(message = "Name can not be empty")
+	private String name; 
 	
 	@Column
+	@Min(value = 0, message = "Age can not be smaller than 0")
+	@Max(value = 120, message = "Age can not be larger than 120") 
+	@NotNull(message = "Age can not be empty")
 	private int age;
 	
 	@Column
+	@Min(value = 4, message = "Zip code can not be smaller than 4")
+	@Max(value = 9999, message = "Zip code can not be larger than 9999")
+	@NotNull(message = "Zip code can not be empty")
+	@Digits(integer = 4, fraction =0, message = "Zip code is acepting only 4 digits")
 	private int zipCode;
 	
 	@Column
+	@NotEmpty(message = "Country can not be empty")
 	private String country;
 	
 	@ManyToOne
