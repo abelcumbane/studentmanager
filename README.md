@@ -62,8 +62,12 @@ http://localhost:8080
 
 ---
 
-3️⃣ **Tela Principal**  
+## 4 **Tela Principal**  
 
 
 ![vaadn](https://github.com/user-attachments/assets/01c28113-da5f-4077-a978-93ce99617b06)
 
+
+## 5 **Tela Principal com Dark Mode Implementado** 
+
+![dark-mode](https://github.com/user-attachments/assets/1a49960e-818f-4b0f-8ffb-db5f0d95c27a)
