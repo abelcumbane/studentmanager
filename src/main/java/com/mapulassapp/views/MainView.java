@@ -29,7 +29,8 @@ import com.vaadin.flow.router.PageTitle;
 		private final StudentService studentService;
 		private LogoLayout logoLayout;
 		private Grid<Student> grid;
-		private TextField filterField;
+		private TextField filterField; 
+		private Student student;
 		
 		public MainView(StudentService studentService) {
 			this.studentService = studentService;
@@ -46,10 +47,25 @@ import com.vaadin.flow.router.PageTitle;
 		private Component createToolbar() {
 			filterField.setPlaceholder("Filter by name...");
 			filterField.setClearButtonVisible(true);
-			filterField.setValueChangeMode(ValueChangeMode.LAZY);
+			filterField.setValueChangeMode(ValueChangeMode.LAZY); 
 			filterField.addValueChangeListener(e -> updateStudent());
 			
-			return new HorizontalLayout(filterField);
+			Button addStudentButton = new Button(new Icon(VaadinIcon.PLUS));
+			Button editStudentButton = new Button(new Icon(VaadinIcon.EDIT));
+			Button removeStudentButton = new Button(new Icon(VaadinIcon.TRASH));
+			
+
+			addStudentButton.addClickListener(e->
+				getUI().ifPresent(ui -> ui.navigate("/add-student")));
+			
+			removeStudentButton.addClickListener(e->
+			getUI().ifPresent(ui -> ui.navigate("/remove-student")));
+			
+			//student = new Student();
+			editStudentButton.addClickListener(e->
+			getUI().ifPresent(ui -> ui.navigate("/edit-student")));
+			
+			return new HorizontalLayout(filterField,addStudentButton,editStudentButton,removeStudentButton);
 		}
 
 		
