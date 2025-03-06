@@ -7,8 +7,10 @@ import com.mapulassapp.models.Student;
 public interface StudentService {
 	
 	public void save(Student student);
+	public void update(Student student);
 	public void remove(Student student);
 	public List<Student> findAll();
 	public List<Student> find(String substring);
+	public Student findById(Integer studentId);
 
 }
