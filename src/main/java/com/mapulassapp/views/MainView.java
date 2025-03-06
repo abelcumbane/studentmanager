@@ -1,6 +1,7 @@
 	package com.mapulassapp.views;
 	
-	import java.util.ArrayList;
+	import java.text.MessageFormat;
+import java.util.ArrayList;
 	import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import com.mapulassapp.models.Status;
 import com.mapulassapp.services.StudentService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-	import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -19,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 	import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.Lumo;
 	
 	
 	@PageTitle(value = "Home")
@@ -31,6 +34,8 @@ import com.vaadin.flow.router.PageTitle;
 		private Grid<Student> grid;
 		private TextField filterField; 
 		private Student student;
+		private Checkbox themeToggle;
+		private static boolean isChecked;
 		
 		public MainView(StudentService studentService) {
 			this.studentService = studentService;
@@ -39,11 +44,33 @@ import com.vaadin.flow.router.PageTitle;
 			
 			createFieldVariables();
 			configuredGrid();
+			
 			add(logoLayout,createToolbar(),grid);
 			loadStudents();	
 			
 		}
 		
+		private Checkbox createToggle() {
+			themeToggle = new Checkbox("Dark Mode");
+			themeToggle.setValue(isChecked);
+			themeToggle.addValueChangeListener(e -> {
+				MainView.isChecked =!isChecked;
+				setTheme(isChecked);
+			});
+			
+			return themeToggle;
+		}
+
+		private void setTheme(boolean dark) {
+			var js = MessageFormat.format(""" 
+					document.documentElement.setAttribute("theme","{0}")
+					""",dark? Lumo.DARK: Lumo.LIGHT);
+			
+			//Execute the Js
+			getElement().executeJs(js);
+		}
+		
+
 		private Component createToolbar() {
 			filterField.setPlaceholder("Filter by name...");
 			filterField.setClearButtonVisible(true);
@@ -65,7 +92,7 @@ import com.vaadin.flow.router.PageTitle;
 			editStudentButton.addClickListener(e->
 			getUI().ifPresent(ui -> ui.navigate("/edit-student")));
 			
-			return new HorizontalLayout(filterField,addStudentButton,editStudentButton,removeStudentButton);
+			return new HorizontalLayout(filterField,addStudentButton,editStudentButton,removeStudentButton, createToggle());
 		}
 
 		
