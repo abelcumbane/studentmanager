@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.mapulassapp.constants.Constants;
 import com.mapulassapp.models.Status;
 	import com.mapulassapp.models.Student;
 import com.mapulassapp.services.StudentService;
@@ -72,7 +73,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 		
 
 		private Component createToolbar() {
-			filterField.setPlaceholder("Filter by name...");
+			filterField.setPlaceholder(Constants.FILTER_NAME);
 			filterField.setClearButtonVisible(true);
 			filterField.setValueChangeMode(ValueChangeMode.LAZY); 
 			filterField.addValueChangeListener(e -> updateStudent());

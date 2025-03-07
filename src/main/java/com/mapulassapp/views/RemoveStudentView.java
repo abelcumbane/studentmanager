@@ -2,6 +2,7 @@ package com.mapulassapp.views;
 
 import java.util.Set;
 
+import com.mapulassapp.constants.Constants;
 import com.mapulassapp.models.Student;
 import com.mapulassapp.services.StudentService;
 import com.vaadin.flow.component.Component;
@@ -107,8 +108,8 @@ public class RemoveStudentView extends VerticalLayout implements SelectionListen
 
 	private void createFieldVariables() {
 		grid = new Grid<>(Student.class);
-		remove = new Button("Remove");
-		cancel = new Button("cancel");
+		remove = new Button(Constants.REMOVE);
+		cancel = new Button(Constants.CANCEL);
 		
 	}
 

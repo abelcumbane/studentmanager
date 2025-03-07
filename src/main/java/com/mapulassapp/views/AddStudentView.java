@@ -2,6 +2,7 @@ package com.mapulassapp.views;
 
 import java.util.List;
 
+import com.mapulassapp.constants.Constants;
 import com.mapulassapp.models.Status;
 import com.mapulassapp.models.Student;
 import com.mapulassapp.services.StatusService;
@@ -100,7 +101,7 @@ public class AddStudentView extends VerticalLayout {
 			binder.writeBean(student);
 			studentService.save(student);
 			clearFields();
-			Notification notification = Notification.show("Student saved successfully...");
+			Notification notification = Notification.show(Constants.STUDENT_SAVED);
 			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			notification.setPosition(Position.TOP_CENTER);
 		} catch (ValidationException e) {
@@ -120,15 +121,15 @@ public class AddStudentView extends VerticalLayout {
 	}
 
 	private void createVariables() {
-		name = new TextField("Name");
-		age = new TextField("Age");
-		zipCode = new TextField("Zip Code");
-		country = new TextField("Country");
-		status = new ComboBox<Status>("Status");
+		name = new TextField(Constants.NAME);
+		age = new TextField(Constants.AGE);
+		zipCode = new TextField(Constants.ZIP_CODE);
+		country = new TextField(Constants.COUNTRY);
+		status = new ComboBox<Status>(Constants.STATUS);
 		image = new LogoLayout();
 		
-		save = new Button("save");
-		close = new Button("cancel");
+		save = new Button(Constants.SAVE);
+		close = new Button(Constants.CANCEL);
 	}
 	
 
