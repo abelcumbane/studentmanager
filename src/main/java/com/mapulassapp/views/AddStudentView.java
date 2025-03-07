@@ -24,10 +24,17 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Add Student")
 @Route("/add-student")
+@PermitAll
+//@PreserveOnRefresh
+//@AnonymousAllowed
 public class AddStudentView extends VerticalLayout {
 	
 	private final StatusService statusService;

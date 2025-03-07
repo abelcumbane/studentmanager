@@ -20,10 +20,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Remove Students")
 @Route("/remove-student")
+@PermitAll
+//@PreserveOnRefresh
+//@AnonymousAllowed
 public class RemoveStudentView extends VerticalLayout implements SelectionListener<Grid<Student>, Student> {
 	
 	private Grid<Student> grid;

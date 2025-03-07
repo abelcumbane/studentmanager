@@ -23,13 +23,21 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import jakarta.annotation.security.PermitAll;
+
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 
 @PageTitle("Edit Student")
 @Route("/edit-student")
+@PermitAll
+//@PreserveOnRefresh
+//@AnonymousAllowed
 public class EditStudentView extends VerticalLayout implements HasUrlParameter<Integer> {
     
     private final StatusService statusService;
