@@ -5,7 +5,7 @@ public class Constants {
 	private Constants() {}
 	
 	public static final String LOGO_URL = "images/tech_logo.png";
-	public static final String LOGIN_IMAGE = "images/login_image.png";
+	public static final String LOGIN_IMAGE = "images/login_image.jpg";
 	public static final String REMOVE = "Remove";
 	public static final String CANCEL = "Cancel";
 	public static final String SAVE = "Save";
