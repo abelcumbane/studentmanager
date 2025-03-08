@@ -33,7 +33,7 @@ public class SecuritServiceImpl implements SecurityService, UserDetailsService {
 
 	@Override
 	public void logout() {
-		UI.getCurrent().getPage().setLocation("/login");
+		UI.getCurrent().getPage().setLocation("login");
 		var logoutHandler = new SecurityContextLogoutHandler();
 		logoutHandler.logout(VaadinServletRequest.getCurrent().getHttpServletRequest(), null, null);
 	}
