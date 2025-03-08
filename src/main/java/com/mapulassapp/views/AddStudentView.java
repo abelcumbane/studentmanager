@@ -31,7 +31,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Add Student")
-@Route("/add-student")
+@Route("add-student")
 @PermitAll
 //@PreserveOnRefresh
 //@AnonymousAllowed
@@ -102,7 +102,7 @@ public class AddStudentView extends VerticalLayout {
 		
 		return new HorizontalLayout(save,close);
 	}
-
+	
 	private void saveStudent() {
 		try {
 			binder.writeBean(student);
@@ -124,7 +124,7 @@ public class AddStudentView extends VerticalLayout {
 	}
 
 	private void closeView() {
-		getUI().ifPresent(ui -> ui.navigate(""));
+		getUI().ifPresent(ui -> ui.navigate("mainview"));
 	}
 
 	private void createVariables() {

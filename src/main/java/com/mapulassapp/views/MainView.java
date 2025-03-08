@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.mapulassapp.constants.Constants;
 import com.mapulassapp.models.Status;
 	import com.mapulassapp.models.Student;
+import com.mapulassapp.services.SecurityService;
 import com.mapulassapp.services.StudentService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -31,7 +32,7 @@ import jakarta.annotation.security.RolesAllowed;
 	
 	
 	@PageTitle(value = "Home")
-	@Route(value = "")
+	@Route(value = "mainview")
 	@PermitAll
 	//@PreserveOnRefresh
 	//@AnonymousAllowed
@@ -39,6 +40,7 @@ import jakarta.annotation.security.RolesAllowed;
 		
 		//Construtor de injection!
 		private final StudentService studentService;
+		private final SecurityService securityService;
 		private LogoLayout logoLayout;
 		private Grid<Student> grid;
 		private TextField filterField; 
@@ -46,8 +48,9 @@ import jakarta.annotation.security.RolesAllowed;
 		private Checkbox themeToggle;
 		private static boolean isChecked;
 		
-		public MainView(StudentService studentService) {
+		public MainView(StudentService studentService,SecurityService securityService) {
 			this.studentService = studentService;
+			this.securityService = securityService;
 			setSizeFull();
 			setAlignItems(Alignment.CENTER);
 			
@@ -89,19 +92,21 @@ import jakarta.annotation.security.RolesAllowed;
 			Button addStudentButton = new Button(new Icon(VaadinIcon.PLUS));
 			Button editStudentButton = new Button(new Icon(VaadinIcon.EDIT));
 			Button removeStudentButton = new Button(new Icon(VaadinIcon.TRASH));
-			
+			Button logout = new Button("logout");
 
 			addStudentButton.addClickListener(e->
-				getUI().ifPresent(ui -> ui.navigate("/add-student")));
+				getUI().ifPresent(ui -> ui.navigate("add-student")));
 			
 			removeStudentButton.addClickListener(e->
-			getUI().ifPresent(ui -> ui.navigate("/remove-student")));
+			getUI().ifPresent(ui -> ui.navigate("remove-student")));
 			
 			//student = new Student();
 			editStudentButton.addClickListener(e->
-			getUI().ifPresent(ui -> ui.navigate("/edit-student")));
+			getUI().ifPresent(ui -> ui.navigate("edit-student")));
 			
-			return new HorizontalLayout(filterField,addStudentButton,editStudentButton,removeStudentButton, createToggle());
+			logout.addClickListener(e -> securityService.logout());
+			
+			return new HorizontalLayout(filterField,addStudentButton,editStudentButton,removeStudentButton,logout, createToggle());
 		}
 
 		

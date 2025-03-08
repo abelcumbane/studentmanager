@@ -34,7 +34,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 
 @PageTitle("Edit Student")
-@Route("/edit-student")
+@Route("edit-student")
 @PermitAll
 //@PreserveOnRefresh
 //@AnonymousAllowed

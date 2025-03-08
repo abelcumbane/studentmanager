@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.mapulassapp.constants.Constants;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Image;
@@ -24,20 +25,23 @@ import com.vaadin.flow.component.textfield.TextField;
 @org.springframework.stereotype.Component
 public class LoginViewFactory {
 	
-
+	@Autowired
 	private final DaoAuthenticationProvider authenticationProvider;
 	
-    @Autowired
+	
+    
     public LoginViewFactory(DaoAuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }
-    
+   
+ 
+   
 	private class LoginForm{
 		private VerticalLayout root;
 		private TextField username;
 		private PasswordField password;
 		private Button login;
-		private Button signup;
+		private Button signup; 
 		
 	
 		public LoginForm init() {
@@ -50,7 +54,7 @@ public class LoginViewFactory {
 			signup.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 			
 			login.addClickListener(e -> login());
-			
+			signup.addClickListener(e -> signup());
 			root = new VerticalLayout();
 			root.setAlignItems(Alignment.CENTER);
 			root.setJustifyContentMode(JustifyContentMode.CENTER);
@@ -59,13 +63,19 @@ public class LoginViewFactory {
 			return this;		
 		}
 		
-		/*
+		
+		private void signup() {
+			signup.getUI().ifPresent(ui -> ui.navigate("signup"));
+		}
+
+
 		private void login() {
 			try {
 				var auth = new UsernamePasswordAuthenticationToken(username.getValue(), password.getValue());
 				var authenticated = authenticationProvider.authenticate(auth);
 				SecurityContextHolder.getContext().setAuthentication(authenticated);
-				login.getUI().ifPresent(ui -> ui.navigate(""));
+				login.getUI().ifPresent(ui -> ui.navigate("mainview"));
+				 //UI.getCurrent().navigate("");
 				
 			} catch (AuthenticationException e) {
 				Notification notification = Notification.show("Incorrect username or password...");
@@ -74,8 +84,8 @@ public class LoginViewFactory {
 			}
 		}
 
-		*/
 		
+		/*
 		private void login() {
 		    try {
 		        // Criação do token de autenticação
@@ -110,6 +120,9 @@ public class LoginViewFactory {
 		        e.printStackTrace();
 		    }
 		}
+		
+		*/
+
 
 		public Component Logout() {
 			root.add(

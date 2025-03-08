@@ -27,7 +27,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Remove Students")
-@Route("/remove-student")
+@Route("remove-student")
 @PermitAll
 //@PreserveOnRefresh
 //@AnonymousAllowed
