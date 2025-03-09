@@ -2,9 +2,13 @@ package com.mapulassapp.views;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.mapulassapp.constants.Constants;
 import com.vaadin.flow.component.Component;
@@ -22,19 +26,21 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @org.springframework.stereotype.Component
 public class LoginViewFactory {
 	
 	@Autowired
 	private final DaoAuthenticationProvider authenticationProvider;
-	
-	
+	@Autowired
+	private final HttpServletRequest request;
     
-    public LoginViewFactory(DaoAuthenticationProvider authenticationProvider) {
+    public LoginViewFactory(DaoAuthenticationProvider authenticationProvider,HttpServletRequest request) {
         this.authenticationProvider = authenticationProvider;
+        this.request = request;
     }
-   
- 
    
 	private class LoginForm{
 		private VerticalLayout root;
@@ -43,6 +49,16 @@ public class LoginViewFactory {
 		private Button login;
 		private Button signup; 
 		
+
+		/*
+		private final HttpServletRequest request; // Agora final e inicializado no construtor
+
+	    public LoginForm(HttpServletRequest request) {
+	        this.request = request;
+	    }
+	    
+	    */
+	    
 	
 		public LoginForm init() {
 			username = new TextField("Username");
@@ -69,11 +85,16 @@ public class LoginViewFactory {
 		}
 
 
+		/*
+		------------------------------------------------------------1. Outra forma de fazer o login -------------------------
+
 		private void login() {
 			try {
 				var auth = new UsernamePasswordAuthenticationToken(username.getValue(), password.getValue());
 				var authenticated = authenticationProvider.authenticate(auth);
 				SecurityContextHolder.getContext().setAuthentication(authenticated);
+				
+				
 				login.getUI().ifPresent(ui -> ui.navigate("mainview"));
 				 //UI.getCurrent().navigate("");
 				
@@ -85,7 +106,8 @@ public class LoginViewFactory {
 		}
 
 		
-		/*
+		
+		 ------------------------------------------------------------2. Outra forma de fazer o login -------------------------
 		private void login() {
 		    try {
 		        // Criação do token de autenticação
@@ -123,6 +145,29 @@ public class LoginViewFactory {
 		
 		*/
 
+		private void login() {
+			try {
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username.getValue(), password.getValue());
+				Authentication auth = authenticationProvider.authenticate(token);
+				
+				SecurityContext sc = SecurityContextHolder.getContext();
+				sc.setAuthentication(auth);
+				HttpSession session = request.getSession(true);
+				session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+				
+				if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+					Notification notification = Notification.show("Credenciais validadas. Acessando aplicação.");
+					notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+					notification.setPosition(Position.TOP_CENTER);
+				}
+				
+				login.getUI().ifPresent(ui -> ui.navigate("mainview"));
+			} catch (org.springframework.security.core.AuthenticationException e) {
+				Notification notification = Notification.show("Credenciais de acesso inválidas!");
+				notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+				notification.setPosition(Position.TOP_CENTER);
+			}
+		}
 
 		public Component Logout() {
 			root.add(

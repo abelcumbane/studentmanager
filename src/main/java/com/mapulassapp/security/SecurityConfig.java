@@ -11,8 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.mapulassapp.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
@@ -22,7 +25,7 @@ import com.vaadin.flow.spring.security.VaadinWebSecurity;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig extends VaadinWebSecurity {
-	 
+	/* 
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
@@ -32,8 +35,14 @@ public class SecurityConfig extends VaadinWebSecurity {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	    http.csrf(csrf -> csrf.disable());
-
+	    
+		/*
+		http.csrf(csrf -> csrf.disable());
+	    http.authorizeHttpRequests(auth -> auth.requestMatchers(new AntPathRequestMatcher("/images/**"))
+	            .permitAll());
+	    ---/
+		http.authenticationManager(authManager(http)).authenticationProvider(authenticationProvider());
+		
 		super.configure(http);
 		setLoginView(http,LoginView.class);	
 	}
@@ -42,11 +51,20 @@ public class SecurityConfig extends VaadinWebSecurity {
 	
 	@Override
 	protected void configure(WebSecurity web) throws Exception {
-		web.ignoring().requestMatchers("/images/**", "/login", "/signup");
+		//web.ignoring().requestMatchers("/images/**", "/login", "/signup");
 		super.configure(web);
 	}
 	
 	
+	 @Bean(name = "configAuthenticationManager")
+	    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+	    	AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+	    	authManagerBuilder.authenticationProvider(authenticationProvider());
+
+	    	return authManagerBuilder.build();
+	    }
+
+	/*
 	@Bean
 	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
 		var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -55,7 +73,6 @@ public class SecurityConfig extends VaadinWebSecurity {
 	}
 	
 	
-	/*
 	protected void configure(HttpSecurity http) throws Exception {
 		
         // Configuração antiga (Spring Security 5.x)
@@ -99,7 +116,7 @@ public class SecurityConfig extends VaadinWebSecurity {
         super.configure(web);
     }
     
-    */
+    ---/
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
@@ -107,6 +124,61 @@ public class SecurityConfig extends VaadinWebSecurity {
 		provider.setUserDetailsService(userDetailsService);
 		provider.setPasswordEncoder(encoder);
 		return provider;
+	}
+	
+	@Override
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		return super.filterChain(http);
+	}
+	
+	*/
+	
+	@Autowired
+	private UserDetailsService user;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.authenticationManager(authManager(http))
+			.authenticationProvider(authProvider())
+			;
+		
+		http.authorizeHttpRequests(authorize -> authorize
+	            .requestMatchers("/images/**", "/login", "/signup").permitAll());
+		
+		super.configure(http);
+		setLoginView(http, LoginView.class);
+	}
+	
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+    	super.configure(web);
+    }
+
+    @Bean(name = "configAuthenticationManager")
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    	AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    	authManagerBuilder.authenticationProvider(authProvider());
+
+    	return authManagerBuilder.build();
+    }
+    
+    @Bean(name = "configAuthenticationProvider")
+    public DaoAuthenticationProvider authProvider() {
+    	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    	provider.setUserDetailsService(user);
+    	provider.setPasswordEncoder(encoder);
+
+    	return provider;
+    }
+
+	@Override
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		return super.filterChain(http);
 	}
 	
 
