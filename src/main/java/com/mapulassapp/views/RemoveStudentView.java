@@ -25,12 +25,15 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Remove Students")
-@Route("remove-student")
-@PermitAll
+
 //@PreserveOnRefresh
 //@AnonymousAllowed
+@PermitAll
+@PageTitle("Remove Students")
+@Route("remove-student")
+@RolesAllowed("ROLE_ADMIN")
 public class RemoveStudentView extends VerticalLayout implements SelectionListener<Grid<Student>, Student> {
 	
 	private Grid<Student> grid;
@@ -81,7 +84,7 @@ public class RemoveStudentView extends VerticalLayout implements SelectionListen
 	}
 
 	private void closeView() {
-		getUI().ifPresent(ui -> ui.navigate(""));
+		getUI().ifPresent(ui -> ui.navigate("mainview"));
 	}
 
 	private void confiGuredGrid() {

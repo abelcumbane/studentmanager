@@ -29,12 +29,16 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+
+
+//@PreserveOnRefresh
+//@AnonymousAllowed
+//@PermitAll
 
 @PageTitle("Add Student")
 @Route("add-student")
-@PermitAll
-//@PreserveOnRefresh
-//@AnonymousAllowed
+@RolesAllowed({"ROLE_ADMIN","ROLE_USER"})
 public class AddStudentView extends VerticalLayout {
 	
 	private final StatusService statusService;

@@ -6,11 +6,10 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+//@PreserveOnRefresh
 @PageTitle("Login")
 @Route(value = "login")
 @AnonymousAllowed
-@PreserveOnRefresh
-
 public class LoginView extends VerticalLayout{
 	
 	//public static final String PATH = "login";

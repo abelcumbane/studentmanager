@@ -30,12 +30,14 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 	
-	
-	@PageTitle(value = "Home")
-	@Route(value = "mainview")
-	@PermitAll
+
 	//@PreserveOnRefresh
 	//@AnonymousAllowed
+	//@PermitAll()
+
+	@PageTitle(value = "Home")
+	@Route(value = "mainview")
+	@RolesAllowed({"ROLE_ADMIN","ROLE_USER"})
 	public class MainView extends VerticalLayout{
 		
 		//Construtor de injection!

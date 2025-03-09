@@ -33,11 +33,11 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 
-@PageTitle("Edit Student")
-@Route("edit-student")
-@PermitAll
 //@PreserveOnRefresh
 //@AnonymousAllowed
+@PermitAll
+@PageTitle("Edit Student")
+@Route("edit-student")
 public class EditStudentView extends VerticalLayout implements HasUrlParameter<Integer> {
     
     private final StatusService statusService;
@@ -113,7 +113,7 @@ public class EditStudentView extends VerticalLayout implements HasUrlParameter<I
     }
 
     private void closeView() {
-        getUI().ifPresent(ui -> ui.navigate(""));
+        getUI().ifPresent(ui -> ui.navigate("mainview"));
     }
 
     private void createVariables() {
